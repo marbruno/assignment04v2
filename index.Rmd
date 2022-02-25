@@ -53,5 +53,64 @@ dcschools %>%
 ```
 
 
-
 Numerous studies have shown that lower student-to-teacher ratios facilitate a better learning environment for students, especially those in primary school. Our data demonstrates that across high schools, middle schools, and primary schools in DC, most schools (>75%) fall below the national 15.3 average ratio (source: Brookings Institute). Nevertheless, there are numerous outliers in DC high schools and primary schools that could potentially be targeted for class-size reduction policies.
+
+## Student to Teacher Ratio is Not a Good Predictor of Math Proficiency Rates (Vizualization 2)
+``` {r Visualisation 2}
+#### Point Chart
+dcschools %>%
+  filter(school_level == "High"| school_level == "Middle"| school_level =="Primary") %>%
+  mutate(student_teacher = enrollment / teachers_fte) %>%
+  #mutate (as.numeric(student_teacher)) %>%
+  filter(student_teacher < 100) %>%
+  ggplot() +
+  geom_point(mapping = aes(x = student_teacher, y = as.numeric(as.character(math_test_pct_prof_midpt),alpha = 0.4), color = title_i_schoolwide)) +
+  facet_wrap(~ school_level) +
+  theme(axis.text.y = element_text(size = 8)) +
+  scale_color_discrete(name="Title I\nEligibility",
+                        breaks=c("", "Yes", "No"),
+                       labels=c("Yes,\nSchoolwide", "Yes,\nTarget Assistance", "No")) +
+  labs(
+    title = "Student to Teacher Ratio is Not a Good Predictor of Math Proficiency Rates",
+    subtitle = "Title I eligibility may serve as a better predictor",
+    x = "Student to Teacher Ratio",
+    y = "Percent of Students Testing at Proficient Math Level",
+    caption = "Urban Institute: Education Data 2019, Washington DC") +
+  coord_cartesian() +
+  scale_y_continuous(breaks = seq(0, 100, 5),limits=c(0, 100))
+
+```
+
+
+We mapped out the relationship between the rate of students scoring proficient on a mathematics assessment and the student-to-teacher ratio for each DC school by school level (high school, middle school, or primary school). Most schools have a student-to--teacher ratio concentrated between 10 and 15, but there is no clear indication that lower or higher ratios are correlated with better math assessment proficiency rates. If anything, our graph indicates that a school's eligibility for Title I funding is a better predictor of proficiency rates. If the District wants to improve math achievement outcomes across all school levels, limiting class room size might not prove an effective policy.
+
+## Title 1 Eligibility by Type of School (Visualization 3)
+``` {r Visualization 3}
+
+dcschools %>%
+  filter (school_level == "High" | school_level == "Middle" |  school_level == "Primary") %>%
+  mutate(title1eligible = if_else(title_i_eligible == "Yes", 1, 0)) %>%
+  mutate (title1text = if_else(title_i_eligible == "Yes", "Eligible", "Not Eligible")) %>%
+  group_by(school_level) %>%
+  summarise(title1eligiblemean = mean(title1eligible) * 100) %>%
+  ggplot(mapping = aes(x = school_level, y = title1eligiblemean, fill = school_level)) +
+  geom_col() +
+  labs (title = "Title 1 Eligibility by Type of School",
+  x = "Type of School",
+  y = "% of Schools that are Title 1 Eligible",
+   caption = "Urban Institute: Education Data 2019, Washington DC",
+  fill = "Type of School") +
+  theme(axis.title.x = element_text(size = 13, face = "bold"),
+        axis.title.y = element_text(size = 13, face = "bold"),
+        axis.text.x= element_text(size = 10, face = "bold"),
+        axis.text.y= element_text(size = 10, face = "bold")) +
+  geom_text(aes(label = round(title1eligiblemean, digits = 2),
+                y = title1eligiblemean + 0.07,
+                fontface = "bold"),
+            position = position_dodge(1),
+            vjust = 0) +  
+  theme_minimal() +
+  scale_y_continuous(breaks = NULL,limits=c(0, 110)) +
+  scale_x_discrete(breaks = NULL)
+
+```
