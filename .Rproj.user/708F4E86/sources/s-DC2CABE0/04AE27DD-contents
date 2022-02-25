@@ -1,0 +1,113 @@
+---
+title: "Assignment 04"
+author: "Deepika Nagesh & Marlyn Bruno"
+date: "2/20/2022"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+[Urban Institute Education Data]("https://educationdata.urban.org/data-explorer/explorer")
+
+![Screenshot for Stretch Exericise](screenshot_of_github_ssh.png)
+
+
+```{r Setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+
+library(tidyverse)
+library(readr)
+
+dcschools <- read.csv("data/EducationDataPortal_02.22.2022_Schools.csv", stringsAsFactor = F)
+glimpse(dcschools)
+
+```
+
+#Visualization 1
+
+``` {r Visualization 1}
+
+#School to teacher ratio by school level (boxplots)
+dcschools %>%
+  mutate(ptr = enrollment/teachers_fte) %>%
+  filter(school_level == "High"| school_level == "Middle"| school_level =="Primary") %>%
+  group_by(school_level) %>%
+  filter(ptr <100) %>%
+  ggplot() +
+  geom_boxplot(mapping = aes(x = school_level, y = ptr))
+
+```
+
+Numerous studies have shown that lower student-to-teacher ratios facilitate a better learning environment for students, especially those in primary school. Our data demonstrates that across high schools, middle schools, and primary schools in DC, most schools (>75%) fall below the national 15.3 average ratio (source: Brookings Institute). Nevertheless, there are numerous outliers in DC high schools and primary schools that could potentially be targeted for class-size reduction policies. 
+
+#Visualization 2 
+
+``` {r Visualization 2}
+
+#Math proficiency rate vs. student to teacher ratio by school level
+dcschools %>%
+  filter(school_level == "High"| school_level == "Middle"| school_level =="Primary") %>%
+  mutate(student_teacher = enrollment / teachers_fte) %>%
+  filter(student_teacher <100) %>%
+  ggplot() +
+  geom_point(mapping = aes(x = student_teacher, y = math_test_pct_prof_midpt, color = title_i_schoolwide), alpha = 0.4) +
+  facet_wrap(~ school_level) +
+  theme(axis.text.y = element_text(size = 4)) +
+  scale_color_discrete(name="Title I\nEligibility",
+                         breaks=c("", "Yes", "No"),
+                         labels=c("Yes,\nSchoolwide", "Yes,\nTarget Assistance", "No")) +
+  labs(
+    title = "Student to Teacher Ratio is Not a Good Predictor of Math Proficiency Rates",
+    subtitle = "Title I eligibility may serve as a better predictor",
+    x = "Student to Teacher Ratio",
+    y = "Percent of Students Testing at Proficient Math Level"
+    ) +
+  coord_cartesian() +
+  scale_y_discrete(c("10", "0", "90", "90"))
+
+```
+
+We mapped out the relationship between the rate of students scoring proficient on a mathematics assessment and the student-to-teacher ratio for each DC school by school level (high school, middle school, or primary school). Most schools have a student-to--teacher ratio concentrated between 10 and 15, but there is no clear indication that lower or higher ratios are correlated with better math assessment proficiency rates. If anything, our graph indicates that a school's eligibility for Title I funding is a better predictor of proficiency rates. If the District wants to improve math achievement outcomes across all school levels, limiting class room size might not prove an effective policy. 
+
+#Visualization 3
+
+``` {r Visualization 3}
+
+dcschools %>%
+  filter (school_level == "High" | school_level == "Middle" |  school_level == "Primary") %>%
+  ggplot() +
+  geom_bar(mapping = aes(x = school_level, fill = title_i_eligible), position = "fill")
+
+```
+
+The US Department of Education classifies schools as Title I if students from low-income families make up at least 40 percent of enrollment. Title I funds can be used to target lowest-performing children.
+
+#Visualization 4
+
+``` {r Visualization 4}
+
+#Allegations histogram 
+dcschools %>%
+  filter(school_level == "High"| school_level == "Middle"| school_level =="Primary") %>% 
+  mutate(harass_sex = as.numeric(allegations_harass_sex)) %>%
+  mutate(harass_race = as.numeric(allegations_harass_race)) %>%
+  mutate(harass_disability = as.numeric(allegations_harass_disability)) %>%
+  mutate(allegations = harass_sex + harass_race + harass_disability) %>%
+  ggplot(aes(allegations, fill=school_level)) +
+  geom_histogram(binwidth = 1) +
+  scale_fill_discrete(name="School Level") +
+  labs(
+    title = "Allegations of Harassment Across the District in 2019",
+    subtitle = "Number of allegations of harassment or bullying on the basis of sex, race, or disability",
+    x = "Number of Allegations",
+    y = "DC Schools"
+    ) +
+  theme_minimal() 
+
+```
+
+Creating a safe learning environment for students is a priority for DC schools. Schools are required to report data on allegations of harassment based on sex, race, disability, sexual orientation, or religion. Importantly, many DC public and charter schools fail to report allegations based on orientation or religion. The Office of the State Superintendent of Education (OSSE) should investigate the inconsistency of data reporting and remind schools of reporting requirements. Our results indicate that there are 22 schools with multiple offenses, with one school even receiving 12 allegations of harassment based on sex, race, or disability. OSSE should target these schools for anti-harassment trainings and initiate investigations within the middle and high schools with concerning levels of harassment allegations. 
+
+

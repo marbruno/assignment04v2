@@ -1,0 +1,24 @@
+---
+title: "Index"
+author: "Deepika Nagesh & Marlyn Bruno"
+date: "2/25/2022"
+output: html_document
+editor_options: 
+chunk_output_type: console
+---
+### Data Source
+[Urban Institute Education Data]("https://educationdata.urban.org/data-explorer/explorer")
+![Screenshot for Stretch Exercise](Screen Shot 2022-02-23 at 16.46.51.png)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+
+library(tidyverse)
+library(readr)
+
+dcschools <- read.csv("EducationDataPortal_02.22.2022_Schools.csv", stringsAsFactor = F)
+glimpse(dcschools)
+
+```
