@@ -22,3 +22,20 @@ dcschools <- read.csv("EducationDataPortal_02.22.2022_Schools.csv", stringsAsFac
 glimpse(dcschools)
 
 ```
+
+#Visualization 1
+
+``` {r Visualization 1}
+
+#School to teacher ratio by school level (boxplots)
+dcschools %>%
+  mutate(ptr = enrollment/teachers_fte) %>%
+  filter(school_level == "High"| school_level == "Middle"| school_level =="Primary") %>%
+  group_by(school_level) %>%
+  filter(ptr <100) %>%
+  ggplot() +
+  geom_boxplot(mapping = aes(x = school_level, y = ptr))
+
+```
+
+Numerous studies have shown that lower student-to-teacher ratios facilitate a better learning environment for students, especially those in primary school. Our data demonstrates that across high schools, middle schools, and primary schools in DC, most schools (>75%) fall below the national 15.3 average ratio (source: Brookings Institute). Nevertheless, there are numerous outliers in DC high schools and primary schools that could potentially be targeted for class-size reduction policies. 
