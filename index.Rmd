@@ -1,6 +1,7 @@
 ---
 title: "Index"
 author: "Deepika Nagesh & Marlyn Bruno"
+date: "2/20/2022"
 date: "2/25/2022"
 output: html_document
 editor_options: 
@@ -8,6 +9,7 @@ chunk_output_type: console
 ---
 ### Data Source
 [Urban Institute Education Data]("https://educationdata.urban.org/data-explorer/explorer")
+![Screenshot for Stretch Exercise](Screen Shot 2022-02-23 at 16.46.51.png)
 ![Screenshot for Stretch Exercise](Screen Shot 2022-02-23 at 16.46.51.png)
 
 ```{r setup, include=FALSE}
@@ -32,10 +34,24 @@ dcschools %>%
   mutate(ptr = enrollment/teachers_fte) %>%
   filter(school_level == "High"| school_level == "Middle"| school_level =="Primary") %>%
   group_by(school_level) %>%
-  filter(ptr <100) %>%
+  filter(ptr < 100) %>%
   ggplot() +
-  geom_boxplot(mapping = aes(x = school_level, y = ptr))
+  geom_boxplot(mapping = aes(x = school_level, y = ptr, colour = school_level)) +
+  labs (title = "Student Teacher Ratio by Type of School",
+  subtitle = "Total Enrolment/Number of Full Time Teachers",
+  x = "Type of School",
+  y = "Student Teacher Ratio",
+  colour = "Type of School",
+  caption = "Urban Institute: Education Data 2019, Washington DC") +
+  theme(axis.title.x = element_text(size = 13, face = "bold"),
+        axis.title.y = element_text(size = 13, face = "bold"), 
+        axis.text.x= element_text(size = 10, face = "bold"),
+        axis.text.y= element_text(size = 10, face = "bold")) +
+  theme_minimal() 
+
 
 ```
 
-Numerous studies have shown that lower student-to-teacher ratios facilitate a better learning environment for students, especially those in primary school. Our data demonstrates that across high schools, middle schools, and primary schools in DC, most schools (>75%) fall below the national 15.3 average ratio (source: Brookings Institute). Nevertheless, there are numerous outliers in DC high schools and primary schools that could potentially be targeted for class-size reduction policies. 
+
+
+Numerous studies have shown that lower student-to-teacher ratios facilitate a better learning environment for students, especially those in primary school. Our data demonstrates that across high schools, middle schools, and primary schools in DC, most schools (>75%) fall below the national 15.3 average ratio (source: Brookings Institute). Nevertheless, there are numerous outliers in DC high schools and primary schools that could potentially be targeted for class-size reduction policies.
