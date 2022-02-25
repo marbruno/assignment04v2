@@ -114,3 +114,31 @@ dcschools %>%
   scale_x_discrete(breaks = NULL)
 
 ```
+The US Department of Education classifies schools as Title I if students from low-income families make up at least 40 percent of enrollment. Title I funds can be used to target the lowest performing children. Interestingly, ~95% of Middle schools in DC are Title I eligible, yet the majority of Title I-eligible schools have fewer than 50% of the student population testing at a proficient math level (Visualization 2). Similar trends exist for primary schools and high schools: approximately three-fourths of the high schools and primary schools are eligible for Title I funds. The data suggests that DC schools are not receiving adequate funding to note an improvement on students' math performance despite being eligible under Title I. Further analyses should look at how changes in federal funding over the years has affected math (and reading) proficiency rates. 
+
+## Allegations of Harassment Across the District in 2019 (Visualization 4)
+``` {r Visualization 4}
+
+#histogram
+dcschools %>%
+  filter(school_level == "High"| school_level == "Middle"| school_level =="Primary") %>%
+  mutate(harass_sex = as.numeric(allegations_harass_sex)) %>%
+  mutate(harass_race = as.numeric(allegations_harass_race)) %>%
+  mutate(harass_disability = as.numeric(allegations_harass_disability)) %>%
+  mutate(allegations = harass_sex + harass_race + harass_disability) %>%
+  ggplot(aes(allegations, fill=school_level)) +
+  geom_histogram(binwidth = 1) +
+  scale_fill_discrete(name="School Level") +
+  labs(
+    title = "Allegations of Harassment Across the District in 2019",
+    subtitle = "Number of allegations of harassment or bullying on the basis of sex, race, or disability",
+    x = "Number of Allegations",
+    y = "Count of DC Schools",
+     caption = "Urban Institute: Education Data 2019, Washington DC") +
+  theme_minimal() 
+
+```
+
+
+Creating a safe learning environment for students is a priority for DC schools. Schools are required to report data on allegations of harassment based on sex, race, disability, sexual orientation, or religion. Importantly, many DC public and charter schools fail to report allegations based on orientation or religion. The Office of the State Superintendent of Education (OSSE) should investigate the inconsistency of data reporting and remind schools of reporting requirements. Our results indicate that there are 22 schools with multiple offenses, with one school even receiving 12 allegations of harassment based on sex, race, or disability. OSSE should target these schools for anti-harassment trainings and initiate investigations within the middle and high schools with concerning levels of harassment allegations.
+
