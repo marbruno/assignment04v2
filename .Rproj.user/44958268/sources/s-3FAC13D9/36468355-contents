@@ -1,23 +1,16 @@
 ---
-title: "Assignment 04"
+title: "Index"
 author: "Deepika Nagesh & Marlyn Bruno"
-date: "2/25/2022"
+date: "2/20/2022"
 output: html_document
 editor_options: 
 chunk_output_type: console
 ---
-[Github Repository]("https://github.com/marbruno/assignment04v2")
-
-Data Source
+### Data Source
 [Urban Institute Education Data]("https://educationdata.urban.org/data-explorer/explorer")
-
-Screenshot of SSH
-![Screenshot for Stretch Exercise](screenshot_github_ssh.png)
-
-![Screenshot for Stretch Exercise](screenshot_of_github_ssh.png)
+![Screenshot for Stretch Exercise](Screen Shot 2022-02-23 at 16.46.51.png)
 
 ```{r setup, include=FALSE}
-
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(message = FALSE)
 knitr::opts_chunk$set(warning = FALSE)
@@ -29,6 +22,7 @@ dcschools <- read.csv("EducationDataPortal_02.22.2022_Schools.csv", stringsAsFac
 glimpse(dcschools)
 
 ```
+
 
 ## Student Teacher Ratio by Type of School (Visualization 1)
 
@@ -58,7 +52,9 @@ dcschools %>%
 ```
 
 
+
 Numerous studies have shown that lower student-to-teacher ratios facilitate a better learning environment for students, especially those in primary school. Our data demonstrates that across high schools, middle schools, and primary schools in DC, most schools (>75%) fall below the national 15.3 average ratio (source: Brookings Institute). Nevertheless, there are numerous outliers in DC high schools and primary schools that could potentially be targeted for class-size reduction policies.
+
 
 ## Student to Teacher Ratio is Not a Good Predictor of Math Proficiency Rates (Vizualization 2)
 ``` {r Visualisation 2}
@@ -106,10 +102,10 @@ dcschools %>%
    caption = "Urban Institute: Education Data 2019, Washington DC",
   fill = "Type of School") +
   theme(axis.title.x = element_text(size = 13, face = "bold"),
-        axis.title.y = element_text(size = 13, face = "bold"),
+        axis.title.y = element_text(size = 13, face = "bold"), 
         axis.text.x= element_text(size = 10, face = "bold"),
         axis.text.y= element_text(size = 10, face = "bold")) +
-  geom_text(aes(label = round(title1eligiblemean, digits = 2),
+  geom_text(aes(label = round(title1eligiblemean, digits = 2), 
                 y = title1eligiblemean + 0.07,
                 fontface = "bold"),
             position = position_dodge(1),
@@ -119,6 +115,8 @@ dcschools %>%
   scale_x_discrete(breaks = NULL)
 
 ```
+
+
 The US Department of Education classifies schools as Title I if students from low-income families make up at least 40 percent of enrollment. Title I funds can be used to target the lowest performing children. Interestingly, ~95% of Middle schools in DC are Title I eligible, yet the majority of Title I-eligible schools have fewer than 50% of the student population testing at a proficient math level (Visualization 2). Similar trends exist for primary schools and high schools: approximately three-fourths of the high schools and primary schools are eligible for Title I funds. The data suggests that DC schools are not receiving adequate funding to note an improvement on students' math performance despite being eligible under Title I. Further analyses should look at how changes in federal funding over the years has affected math (and reading) proficiency rates. 
 
 ## Allegations of Harassment Across the District in 2019 (Visualization 4)
